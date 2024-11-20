@@ -6,9 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-//@EnableJpaRepositories(basePackages = {"org.mbr.authservice.repository"})
-//@ComponentScan(basePackages = {"org.mbr.authservice.controller","org.mbr.authservice.auth", "org.mbr.authservice.service"})
-//@ComponentScan(basePackages = {"org.mbr.authservice"})
 public class App {
 
 	public static void main(String[] args) {
