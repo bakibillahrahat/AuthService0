@@ -3,6 +3,8 @@ package org.mbr.authservice.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.mbr.authservice.entities.UserInfo;
+import org.mbr.authservice.eventProducer.UserInfoEvent;
+import org.mbr.authservice.eventProducer.UserInfoProducer;
 import org.mbr.authservice.model.UserInfoDto;
 import org.mbr.authservice.repository.UserRepository;
 import org.slf4j.Logger;
@@ -26,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
@@ -53,7 +57,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         String userId = UUID.randomUUID().toString();
         userRepository.save(new UserInfo(userId, userInfoDto.getUsername(), userInfoDto.getPassword(), new HashSet<>()));
+        // pushEventToKafka(userInfoDto);
+        userInfoProducer.sendEventToKafka(userInfoEventToPublish(userInfoDto, userId));
         return true;
+    }
+
+    private UserInfoEvent userInfoEventToPublish(UserInfoDto userInfoDto, String userId){
+        return UserInfoEvent.builder()
+                .userId(userId)
+                .firstName(userInfoDto.getFirstname())
+                .lastName(userInfoDto.getLastname())
+                .email(userInfoDto.getEmail())
+                .phoneNumber(userInfoDto.getPhoneNumber())
+                .build();
     }
 
 }

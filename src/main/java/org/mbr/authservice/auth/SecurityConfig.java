@@ -1,6 +1,7 @@
 package org.mbr.authservice.auth;
 
 import lombok.Data;
+import org.mbr.authservice.eventProducer.UserInfoProducer;
 import org.mbr.authservice.repository.UserRepository;
 import org.mbr.authservice.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class SecurityConfig {
 
     @Bean
     @Autowired
-    public UserDetailsService userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder){
-        return new UserDetailsServiceImpl(userRepository, passwordEncoder);
+    public UserDetailsService userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserInfoProducer userInfoProducer){
+        return new UserDetailsServiceImpl(userRepository, passwordEncoder, userInfoProducer);
     }
 
     @Bean
